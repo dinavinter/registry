@@ -8,18 +8,25 @@
     "dev": "remix vite:dev",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "netlify serve",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "deno:zon-gallery": "deno serve --env-file -A zon_gallery.tsx",
+    "deno:http": "deno serve --env-file -A http_gallery.tsx"
   },
   "dependencies": {
+    "@cxai/ide": "^1.0.19",
     "@netlify/functions": "^2.6.0",
     "@netlify/remix-adapter": "^2.3.1",
     "@remix-run/node": "^2.16.5",
     "@remix-run/react": "^2.16.5",
     "@remix-run/serve": "^2.16.5",
-    "isbot": "^4.1.0"
+    "@valtown/sdk": "^1.0.0",
+    "isbot": "^4.1.0",
+    "lucide-react": "^0.503.0",
+    "tailwindcss": "^4.1.4"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.16.5",
+    "@tailwindcss/vite": "^4.1.4",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.7.4",

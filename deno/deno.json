@@ -1,0 +1,13 @@
+{
+  "nodeModulesDir": "auto",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "npm:hono@latest/jsx"
+  },
+  "imports": {
+    "hono": "npm:hono@latest",
+    "hono/": "npm:hono@latest/",
+    "@valtown/sdk": "npm:@valtown/sdk@latest",
+    "npm:hono/jsx-runtime": "npm:hono@latest/jsx/jsx-runtime"
+  }
+} 

@@ -3,6 +3,7 @@ import ValTown from "npm:@valtown/sdk";
 import { Hono } from "npm:hono";
 import { PropsWithChildren } from "npm:hono/jsx";
 import { jsxRenderer } from "npm:hono/jsx-renderer";
+import { FileRetrieveResponse } from "npm:@valtown/sdk";
 
 const app = new Hono();
 
@@ -64,8 +65,11 @@ async function getZon(zon: string) {
     recursive: true,
   }).then(res => res.data);
 
+  function isHttp(file: FileRetrieveResponse): file is FileRetrieveResponse & {type: "http"} {
+    return file.type === "http";
+  }
   return {
-    files: files.map((file) => ({
+    files: files.filter(isHttp).map((file) => ({
       ...file,
       likeCount: 0,
       referenceCount: 0,
@@ -77,10 +81,11 @@ async function getZon(zon: string) {
 
 app.get("/",  (c) => c.redirect("registry"));
 app.get("/:zon", async (c) => {
+
+  
   // Fetch vals from ValTown API
   const { files } = await getZon(c.req.param("zon"));
-  const httpFiles = files.filter((file) => file.type === "http");
-
+ 
   return c.render(
     <main className="container mx-auto px-4 py-8">
       <section className="mb-10 rounded-xl overflow-hidden shadow-lg relative">
@@ -105,7 +110,7 @@ app.get("/:zon", async (c) => {
         </div>
       </section>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {httpFiles.map((file: any) => (
+        {files.map((file) => (
           <a
             key={file.name}
             href={`/${file.name}`}

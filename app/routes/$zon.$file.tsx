@@ -1,8 +1,8 @@
 import '@valtown/sdk/shims/web'
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
-import { useLoaderData, useNavigation, useSubmit, Await, useAsyncValue } from "@remix-run/react";
+import {  useLoaderData, useNavigation, useSubmit } from "@remix-run/react";
 import { Code2, Save } from "lucide-react";
-import { useCallback, useRef, useEffect, Suspense } from "react";
+import { useCallback, useRef } from "react";
 import ValTown from "@valtown/sdk";
 import type { HTMLTypeScriptEditor } from "@cxai/ide";
    
@@ -28,29 +28,11 @@ declare global {
  
 
 export async function loader({ params }: LoaderFunctionArgs) {
-  const { file: name } = params;
-  const client = new ValTown({bearerToken: import.meta.env.VAL_TOWN_API_KEY});
-  const zon = await client.me.vals.list({
-    limit: 100,
-    offset: 0
-  }).then(res => res.data).then(files => files.find((z) => z.name === params.zon)) 
+  const { file, zon } = params;
 
-  const file = await client.vals.files.retrieve(zon?.id || "", {
-    path: name!,
-    recursive: false
-  }).then(res => res.data[0]);
-
-  if (!file || !zon) {
-    throw new Error(`File '${name}' not found` , { cause: { file, zon } });
-  }
- 
   return {
     zon,
-    file,
-    content: client.vals.files.getContent(zon.id, { path: file.path }).then(res => res.text()).then(text => {
-      console.debug(text.slice(0, 50)+ "...");
-      return text;
-    }),
+    file 
   };
 }
 
@@ -64,21 +46,21 @@ export async function action({ request,params }: ActionFunctionArgs) {
   const zon = await client.me.vals.list({
     limit: 100,
     offset: 0
-  }).then(res => res.data).then(files => files.find((z) => z.name === params.zon)) || {id: ""};
+  }).then(res => res.data).then(files => files.find((z) => z.name === params.zon)) ;
 
   if (!file || !zon) {
     throw new Error("Missing required parameters", { cause: { file, zon } });
   }
   return await client.vals.files.update(zon.id, {
     path: file,
-    content: content
+    content: content,
   });
 
 }
 
 
 export default function FileEditor() {
-  const { file, content, zon} = useLoaderData<typeof loader>();
+  const { file, zon} = useLoaderData<typeof loader>();
   
   const editorRef = useRef<HTMLTypeScriptEditor>(null);
   const navigation = useNavigation();
@@ -91,8 +73,6 @@ export default function FileEditor() {
     formData.append("content", editorRef.current.value);
     submit(formData, { method: "post", viewTransition: true });
   }, [submit]);
- 
- 
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -101,7 +81,7 @@ export default function FileEditor() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <Code2 className="h-6 w-6 text-blue-500" />
-              <h1 className="text-xl font-semibold text-gray-900">{file.name}</h1>
+              <h1 className="text-xl font-semibold text-gray-900">{file}</h1>
             </div>
               <button
                 type="button"
@@ -119,33 +99,18 @@ export default function FileEditor() {
           </div>
         </div>
         <div className="h-[calc(100vh-12rem)] w-full">
-          <Suspense fallback={<div className="p-8 text-center text-gray-400">Loading editor…</div>}>
-            <Await resolve={content}>
-               <TSEditor zon={zon.name} file={file.path}  /> 
-            </Await>
-          </Suspense>
+        <ts-editor
+          id="editor"
+          component={`${zon}/${file}`}
+          room={`@vals`}
+          url={`wss://yjs.cfapps.us10-001.hana.ondemand.com`}
+          className="h-full w-full"
+        >
+        </ts-editor>
         </div>
       </div>
     </div>
   );
 } 
 
-export  function TSEditor({zon, file}: {zon: string, file: string }) {
-  const editorRef = useRef<HTMLTypeScriptEditor>(null);
-  // const yjsurl=`${import.meta.env.YJS_URL}`
-
-  const content = useAsyncValue();
-  useEffect(() => {
-    if(editorRef.current && content as string){
-      editorRef.current.value = content as string;
-    }
-  }, [content]);
-
-  return <ts-editor
-    ref={editorRef}
-    component="codemirror"
-    room={`val-${zon}-${file}`}
-    className="h-full w-full"
-  /> ;
-} 
-
+ 

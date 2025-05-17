@@ -9,8 +9,9 @@
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "netlify serve",
     "typecheck": "tsc",
-    "deno:zon-gallery": "deno serve --env-file -A zon_gallery.tsx",
-    "deno:http": "deno serve --env-file -A http_gallery.tsx"
+    "deno:zon-gallery": "deno serve --env-file -A d",
+    "deno:http": "deno serve --env-file -A deno/handlers.tsx",
+    "deno:editor": "deno serve --env-file -A deno/editor.tsx"
   },
   "dependencies": {
     "@cxai/ide": "^1.0.19",

@@ -1,0 +1,6 @@
+{
+  "vals": {
+    "include": ["registry", "http", "api"],
+    "exclude": ["test", "temp"]
+  }
+}

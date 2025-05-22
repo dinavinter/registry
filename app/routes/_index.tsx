@@ -1,11 +1,9 @@
 import '@valtown/sdk/shims/web';
 import { useLoaderData, Link } from '@remix-run/react';
 import { FolderKanban as ZonsIcon, Star, GitFork, Globe, User } from 'lucide-react';
-
 import ValTown from '@valtown/sdk';
 import type { MetaFunction } from '@remix-run/node';
-
-
+import config from '../../config.json';
 
 export const meta: MetaFunction = () => {
   return [
@@ -21,8 +19,23 @@ export async function loader() {
     offset: 0
   });
 
+  // Filter vals based on config
+  const filteredVals = vals.data.filter(val => {
+    const name = val.name.toLowerCase();
+    // Check if name matches any include pattern
+    const isIncluded = config.vals.include.some(pattern => 
+      name.includes(pattern.toLowerCase())
+    );
+    // Check if name matches any exclude pattern
+    const isExcluded = config.vals.exclude.some(pattern => 
+      name.includes(pattern.toLowerCase())
+    );
+    
+    return isIncluded && !isExcluded;
+  });
+
   return {
-    zons: vals.data.map((val) => ({
+    zons: filteredVals.map((val) => ({
       ...val,
       likeCount: 0,
       referenceCount: 0
@@ -92,4 +105,4 @@ export default function Zons() {
       </div>
     </div>
   );
-} 
+}

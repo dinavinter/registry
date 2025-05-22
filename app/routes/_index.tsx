@@ -20,19 +20,17 @@ export async function loader() {
   });
 
   // Filter vals based on config
-  const filteredVals = vals.data.filter(val => {
-    const name = val.name.toLowerCase();
-    // Check if name matches any include pattern
-    const isIncluded = config.vals.include.some(pattern => 
-      name.includes(pattern.toLowerCase())
-    );
-    // Check if name matches any exclude pattern
-    const isExcluded = config.vals.exclude.some(pattern => 
-      name.includes(pattern.toLowerCase())
-    );
-    
-    return isIncluded && !isExcluded;
-  });
+  const configuredVals = Object.keys(config.vals)
+    .filter(key => config.vals[key].active)
+    .map(key => ({
+      id: config.vals[key].id,
+      name: key,
+      title: config.vals[key].title
+    }));
+
+  const filteredVals = vals.data.filter(val => 
+    configuredVals.some(configVal => configVal.id === val.id)
+  );
 
   return {
     zons: filteredVals.map((val) => ({
@@ -65,7 +63,7 @@ export default function Zons() {
                  <div className="flex items-center space-x-2">
                    <Globe className="h-5 w-5 text-gray-500" />
                    <h3 className="text-lg font-medium text-gray-900 truncate">
-                     {zon.name}
+                     {config.vals[zon.name]?.title || zon.name}
                    </h3>
                  </div>
                </div>

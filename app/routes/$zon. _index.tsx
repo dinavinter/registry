@@ -199,7 +199,13 @@ export default function ZonDetail() {
             key={file.id}
             className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden cursor-pointer"
           >
+          <Link
+        to={`./${file.name}`}
+        className="p-4 block"
+      >
+
             {FileCards[file.type as keyof typeof FileCards]?.({ file }) ?? <div>Unknown file type {file.type}</div>}
+          </Link>
           </div>
         ))}
       </div>

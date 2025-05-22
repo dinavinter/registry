@@ -24,6 +24,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
     offset: 0
   }).then(res => res.data).then(files => files.find((z) => z.name === params.zon)) || {id: ""};
 
+  
   const files = await client.vals.files.retrieve(zon, {
     path: "",
     recursive: true,

@@ -158,7 +158,10 @@ const FileCards = {
   },
   file: function FileFile({ file }: FileItemProps) {
     return (
-      <div className="p-4">
+      <Link
+        to={`./${file.name}`}
+        className="p-4 block"
+      >
         <FileBadge
           type={"file"}
           icon={<FileIcon className="h-5 w-5 text-gray-500" />}
@@ -166,7 +169,7 @@ const FileCards = {
           bgColor="bg-gray-100"
           textColor="text-gray-800"
         />
-      </div>
+      </Link>
     );
   },
 };

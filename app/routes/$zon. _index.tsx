@@ -77,10 +77,6 @@ function FileBadge({
 const FileCards = {
   http: function HttpFile({ file }: FileItemProps) {
     return (
-      <Link
-        to={`./${file.name}`}
-        className="p-4 block"
-      >
         <FileBadge
           type={"http"}
           icon={<Code2 className="h-5 w-5 text-blue-500" />}
@@ -89,7 +85,6 @@ const FileCards = {
           textColor="text-blue-800"
         />
         <FileFooter file={file} />
-      </Link>
     );
   },
   email:function EmailFile({ file }: FileItemProps) {

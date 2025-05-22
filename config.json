@@ -1,7 +1,8 @@
 {
   "vals": {
     "mcp-gateway": {
-      "id": "06d0777c-370c-11f0-919f-9e149126039e"
+      "id": "06d0777c-370c-11f0-919f-9e149126039e",
+      "title": "MCP Gateway"
     }
   }
 }

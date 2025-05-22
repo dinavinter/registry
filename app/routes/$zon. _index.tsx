@@ -76,6 +76,10 @@ function FileBadge({
 const FileCards = {
   http: function HttpFile({ file }: FileItemProps) {
     return (
+      <Link
+        to={`./${file.name}`}
+        className="p-4 block"
+      >
         <FileBadge
           type={"http"}
           icon={<Code2 className="h-5 w-5 text-blue-500" />}
@@ -84,11 +88,15 @@ const FileCards = {
           textColor="text-blue-800"
         />
         <FileFooter file={file} />
+      </Link>
     );
   },
   email:function EmailFile({ file }: FileItemProps) {
     return (
-      <div className="p-4">
+      <Link
+        to={`./${file.name}`}
+        className="p-4 block"
+      >
         <FileBadge
           type={"email"}
           icon={<Mail className="h-5 w-5 text-purple-500" />}
@@ -97,12 +105,15 @@ const FileCards = {
           textColor="text-purple-800"
         />
         <FileFooter file={file} />
-      </div>
+      </Link>
     );
   } ,
   interval:   function IntervalFile({ file }: FileItemProps) {
     return (
-      <div className="p-4">
+      <Link
+        to={`./${file.name}`}
+        className="p-4 block"
+      >
         <FileBadge
           type={"interval"}
           icon={<Clock className="h-5 w-5 text-orange-500" />}
@@ -111,7 +122,7 @@ const FileCards = {
           textColor="text-orange-800"
         />
         <FileFooter file={file} />
-      </div>
+      </Link>
     );
   },
 
@@ -199,13 +210,7 @@ export default function ZonDetail() {
             key={file.id}
             className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden cursor-pointer"
           >
-          <Link
-        to={`./${file.name}`}
-        className="p-4 block"
-      >
-
             {FileCards[file.type as keyof typeof FileCards]?.({ file }) ?? <div>Unknown file type {file.type}</div>}
-          </Link>
           </div>
         ))}
       </div>

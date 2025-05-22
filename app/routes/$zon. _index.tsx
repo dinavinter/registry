@@ -128,7 +128,10 @@ const FileCards = {
 
   script: function ScriptFile({ file }: FileItemProps) {
     return (
-      <div className="p-4">
+      <Link
+        to={`./${file.name}`}
+        className="p-4 block"
+      >
         <FileBadge
           type={"script"}
           icon={<FileText className="h-5 w-5 text-green-500" />}
@@ -137,7 +140,7 @@ const FileCards = {
           textColor="text-green-800"
         />
         <FileFooter file={file} />
-      </div>
+      </Link>
     );
   },
   directory: function DirectoryFile({ file }: FileItemProps) {
